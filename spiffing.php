@@ -104,6 +104,14 @@
 				if( !file_exists( $this->file ) or !is_readable( $file ) ) {
 					$this->not_found();
 				}
+				
+				
+				// Validate input file is a CSS file
+				$ext = pathinfo($this->file, PATHINFO_EXTENSION);
+				if ($ext != 'css') {
+					$this->not_found();
+				}
+				
 				$this->css = file_get_contents( $this->file );
 			} else {
 				// No spiffing CSS was found.
