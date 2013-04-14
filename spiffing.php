@@ -141,9 +141,24 @@
 			foreach( $replacements as $search => $replace ) {
 				$processed = str_ireplace( $search, $replace, $this->css );
 			}
-			// Set the CSS header.
+						
+			// Set caching and content-type
+			$expiry = 604800; // One week
+			$this->set_header('Pragma: public');
+			$this->set_header('Cache-Control: max-age=' . $expiry);
+			$this->set_header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $expiry) . ' GMT');
 			$this->set_header('Content-Type: text/css');
+			
+			// Enable gzip
+			if (extension_loaded('zlib')) {
+				ob_start('ob_gzhandler');
+			} else {
+				ob_start();
+			}
+			
 			echo $processed;
+			
+			ob_end_flush();
 			exit;
 		}
 		/*
